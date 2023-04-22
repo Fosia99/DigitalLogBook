@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "837424323987",
+    "project_id": "digitallogbook-762f5",
+    "storage_bucket": "digitallogbook-762f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837424323987:android:31059b1fef94b2b4005c66",
+        "android_client_info": {
+          "package_name": "com.digital_logbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "837424323987-m57koglt70j7udhbg5ttjj7dbpkke00r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBRu2-FZdnysa_suQAQgQGKDAUnDqDqVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "837424323987-m57koglt70j7udhbg5ttjj7dbpkke00r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
