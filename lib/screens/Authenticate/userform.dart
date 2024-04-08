@@ -1,4 +1,6 @@
 
+import 'package:digital_logbook/theme/colors/light_colors.dart';
+
 import '/data/custom_user.dart';
 import '/screens/loading.dart';
 import '/screens/wrapper.dart';
@@ -42,7 +44,7 @@ class _UserformState extends State<Userform> {
             "User Details",
             style: TextStyle(color: Colors.black),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: LightColors.kDarkYellow,
         ),
         body: Container(
           // form widget
@@ -92,7 +94,7 @@ class _UserformState extends State<Userform> {
                               type = (newValue as String).toLowerCase();
                             });
                           },
-                          items: ['Student', 'Lecturer','Supervisor'].map((location) {
+                          items: ['Student','Lecture'].map((location) {
                             return DropdownMenuItem(
                               child: new Text(location),
                               value: location,
@@ -118,7 +120,7 @@ class _UserformState extends State<Userform> {
                               course = (newValue as String).toLowerCase();
                             });
                           },
-                          items: ['Occupational Therapy', 'Pharmacy','Nurse'].map((location) {
+                          items: ['Occupational Therapy'].map((location) {
                             return DropdownMenuItem(
                               child: new Text(location),
                               value: location,

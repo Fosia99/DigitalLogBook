@@ -39,7 +39,7 @@ class _IndirectHomeState extends State<IndirectHome> {
 
 
       bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor:  LightColors.kDarkYellow,
+          backgroundColor:  LightColors.kYellow,
           height: 40,
           index: 1,
           onTap: (currentIndex) => setState(() {

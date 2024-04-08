@@ -1,7 +1,7 @@
 // @dart=2.15
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
-import 'package:digital_logbook/LectureScreens/rotationsDashboard.dart';
-import 'package:digital_logbook/LectureScreens/LogsDirectR1.dart';
+import 'package:digital_logbook/LectureScreens/LogsDashboard.dart';
+import 'package:digital_logbook/LectureScreens/LogsDirectR.dart';
 import 'package:digital_logbook/screens/Planner.dart';
 import 'package:digital_logbook/theme/colors/light_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +11,9 @@ import 'package:focused_menu/modals.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../screens/LogSession.dart';
-import 'logsHome.dart';
+import 'GradesDashboard.dart';
+import 'LecturerDashboardScreen.dart';
+
 
 
 class MyStudents extends StatefulWidget {
@@ -30,7 +32,7 @@ class _MyStudentsState extends State<MyStudents> {
   final TextEditingController _studentNo = TextEditingController();
   final TextEditingController _type = TextEditingController();
   final TextEditingController _year = TextEditingController();
-
+  late final String fullname;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   final CollectionReference students =
@@ -48,6 +50,8 @@ class _MyStudentsState extends State<MyStudents> {
       _studentNo.text = documentSnapshot['studentNo'];
       _type.text = documentSnapshot['type'];
       _year.text = documentSnapshot['year'];
+
+      String _fullname =  documentSnapshot['firstname'] +" "+ documentSnapshot['lastname'];
 
 
     }
@@ -67,45 +71,25 @@ class _MyStudentsState extends State<MyStudents> {
     final User? user = auth.currentUser;
     final uid = user?.uid.toString();
 
-    return Scaffold(
-      body: Container(
-        child: SingleChildScrollView(
-          child: ColumnSuper(
-            innerDistance: -30.0,
-            children: [
-              Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  height: 120,
-                  color: LightColors.kRed,
-                  child: Column(
-                    children: [
-                      const Padding(padding: EdgeInsets.only(top: 40)),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          CircleAvatar(
-                            backgroundColor: LightColors.kLightYellow,
-                            child: Text(
-                              '',
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                          ),
-                          Text(
-                            'My Students',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                          CircleAvatar(
-                            backgroundColor: LightColors.kLightYellow,
-                            child: Text(
-                              '',
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  )),
+
+
+    return Scaffold(
+
+
+      appBar: AppBar(title: const Text("My Students",
+      ),
+        backgroundColor: LightColors.kDarkYellow,
+          leading: IconButton(
+              icon: new Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                  MaterialPageRoute(
+                    builder: (context) => LecturerDashboardScreen(),
+                  ),
+                );
+              })),
+      body:
               Container(
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -126,22 +110,26 @@ class _MyStudentsState extends State<MyStudents> {
                             itemBuilder: (context, index) {
                               final DocumentSnapshot documentSnapshot =
                               streamSnapshot.data!.docs[index];
+
+                              String _fullname =  documentSnapshot['firstname'] +" "+ documentSnapshot['lastname'];
+
+
                               return Card(
                                 child: ListTile(
-
-                                  title: Text(
-                                    documentSnapshot['firstname'],
+                                  leading: Icon(Icons.star_border,size: 40,color: Colors.black,),
+                                  title: Text(  "Student Name: " +
+                                    _fullname.toString() ,
                                     style: const TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,fontFamily: 'Family Name'),
                                   ),
-                                  subtitle: Text(
-                                    documentSnapshot['lastname'],
+                                  subtitle: Text(  "Student Number: " +
+                                    documentSnapshot['studentNo'],
                                     style: const TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,fontFamily: 'Family Name'),
                                   ),
 
                                   onTap: () {
@@ -149,9 +137,10 @@ class _MyStudentsState extends State<MyStudents> {
                                     // ...
                                     // Then close the drawer
                                     var docId = documentSnapshot['uid'];
+                                    var docName = documentSnapshot['firstname'];
                                     Navigator.pushReplacement(context,
                                       MaterialPageRoute(
-                                        builder: (context) => rotationsDashboard(docId),
+                                        builder: (context) => rotationsDashboard(docId,docName),
                                       ),
                                     );
                                   },
@@ -166,15 +155,7 @@ class _MyStudentsState extends State<MyStudents> {
                       );
                     }),
               ),
-            ],
-          ),
-        ),
-      ),
-      //floatingActionButton: FloatingActionButton(
-       // onPressed: () => createTodo(),
-        //backgroundColor: LightColors.kGreen,
-        //child: const Icon(Icons.add),
-      //),
-    );
+          );
+
   }
 }

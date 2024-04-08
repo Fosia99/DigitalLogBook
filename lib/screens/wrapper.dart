@@ -1,13 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:digital_logbook/screens/LecturerDashboardScreen.dart';
+import 'package:digital_logbook/LectureScreens/LecturerDashboardScreen.dart';
 import 'package:digital_logbook/screens/OccupationalDashboardScreen.dart';
 
 import '/data/accounts.dart';
 import '/data/custom_user.dart';
 import '/screens/Authenticate/authenticate.dart';
-import '/screens/student_homepage.dart';
-import '/screens/teacher_homepage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +37,7 @@ class _WrapperState extends State<Wrapper> {
       if (typeOfCurrentUser == 'student'){
         return  OccupationalDashboardScreen();
       }
-      else if(typeOfCurrentUser == 'lecturer'){
+      else if(typeOfCurrentUser == 'lecture'){
         return LecturerDashboardScreen();
       }
 

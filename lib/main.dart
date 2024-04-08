@@ -1,4 +1,5 @@
-// @dart=2.15
+ // @dart=2.15
+
 import 'package:digital_logbook/screens/Planner.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,7 @@ void main() async {
     enabled: true,
     builder: (BuildContext context) => const Home(),
     ),
+
   );
 }
 // it just returns basic settings for MaterialApp
@@ -75,41 +77,25 @@ class Home extends StatelessWidget {
             //debugShowCheckedModeBanner: false,
             home: Wrapper(),
           routes: {
+
             OccupationalDashboardScreen.TAG:(context)=>OccupationalDashboardScreen(),
             OverviewScreen.TAG:(context)=> OverviewScreen(),
             LogSession.TAG:(context)=>LogSession(),
             DashboardScreenNurse.TAG:(context)=>DashboardScreenNurse(),
             ProfilePage.TAG:(context) =>ProfilePage(),
             Planner.TAG:(context) => Planner(),
-
             ClinicListScreen.TAG:(context)=>ClinicListScreen(),
-
             EmergencyCare.TAG:(context)=> EmergencyCare(),
-            //OperatingDefibrillator.TAG:(context)=>OperatingDefibrillator(),
-            //PerformingTriage.TAG:(context)=> PerformingTriage(),
             NurseReportingHome.TAG:(context) => NurseReportingHome(),
-
+           // HomePage.routeName: (context) => HomePage(),
+            //PlannerPage.routeName: (context) => PlannerPage(),
+            //PlanDetailPage.routeName: (context) => PlanDetailPage(),
+           // SettingsPage.routeName: (context) => SettingsPage(),
+          //  MeetingRoomsPage.routeName: (context) => MeetingRoomsPage(),
+          //  TimezonesPage.routeName: (context) => TimezonesPage(),
 
           },
         ),
         );
   }
 }
-
-// void main() => runApp(OnlineClassroomApp());
-//
-// class OnlineClassroomApp extends StatefulWidget {
-//   @override
-//   _OnlineClassroomAppState createState() => _OnlineClassroomAppState();
-// }
-//
-// class _OnlineClassroomAppState extends State<OnlineClassroomApp> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: "Classroom App",
-//       debugShowCheckedModeBanner: false,
-//       home: HomePage(),
-//     );
-//   }
-// }

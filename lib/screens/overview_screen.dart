@@ -13,8 +13,6 @@ import '/screens/auth_screen.dart';
 import '/data/accounts.dart';
 import '/data/custom_user.dart';
 import '/screens/Authenticate/authenticate.dart';
-import '/screens/student_homepage.dart';
-import '/screens/teacher_homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

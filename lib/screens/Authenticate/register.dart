@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables
 // @dart=2.15
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:digital_logbook/theme/colors/light_colors.dart';
 
 import '/screens/Authenticate/userform.dart';
 import '/screens/loading.dart';
@@ -44,7 +45,7 @@ class _RegisterState extends State<Register> {
                 "Register",
                 style: TextStyle(color: Colors.white),
               ),
-              backgroundColor: Color.fromRGBO(111, 105, 172, 1),
+              backgroundColor: LightColors.kYellow,
               actions: [
                 // login button on the top right corner of appbar
                 TextButton.icon(
@@ -68,7 +69,7 @@ class _RegisterState extends State<Register> {
                       padding: const EdgeInsets.fromLTRB(15.0, 50.0, 0.0, 0.0),
                       child: const Text('Hi',
                           style: TextStyle(
-                              color: Color.fromRGBO(253, 111, 150, 1),
+                              color: LightColors.kYellow,
                               fontSize: 80.0,
                               fontFamily: "Raleway",
                               fontWeight: FontWeight.bold)),
@@ -80,7 +81,7 @@ class _RegisterState extends State<Register> {
                           fontFamily: "Raleway",
                           fontSize: 80.0,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(111, 105, 172, 1),
+                          color: LightColors.kDarkYellow,
                         ),
                         child: AnimatedTextKit(
                           animatedTexts: [
@@ -98,7 +99,7 @@ class _RegisterState extends State<Register> {
                           style: TextStyle(
                               fontSize: 80.0,
                               fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(111, 105, 172, 1))),
+                            color: LightColors.kDarkYellow,)),
                     )
                   ],
                 ),
@@ -182,7 +183,7 @@ class _RegisterState extends State<Register> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                primary:Color.fromRGBO(111, 105, 172, 1),
+                                primary:LightColors.kYellow,
                                 minimumSize: Size(150, 50),
                               ),
                             ),

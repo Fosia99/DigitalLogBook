@@ -1,4 +1,8 @@
-// @dart=2.15
+
+import 'dart:html';
+import 'dart:html';
+import 'dart:html';
+
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:digital_logbook/screens/Planner.dart';
 import 'package:digital_logbook/theme/colors/light_colors.dart';
@@ -34,14 +38,13 @@ class _DirectConductState extends State<DirectConduct> {
 
   final TextEditingController _title = TextEditingController();
   final TextEditingController _number = TextEditingController();
-  final TextEditingController _date = TextEditingController();
+
   final TextEditingController _selectVenue = TextEditingController();
   final TextEditingController _reasonsCancel = TextEditingController();
   final TextEditingController _startTime = TextEditingController();
   final TextEditingController _endTime = TextEditingController();
-
+ Timestamp? _date ;
   var _rotation ='';
-  // var _endTime ='';
   var _bookVenue = '';
   var _clients = '';
   var _sessionType = '';
@@ -63,7 +66,7 @@ class _DirectConductState extends State<DirectConduct> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   final CollectionReference direct =
-      FirebaseFirestore.instance.collection('direct');
+      FirebaseFirestore.instance.collection('sessionLogs');
 
   Future<void> createTodo([DocumentSnapshot? documentSnapshot]) async {
     String action = 'add';
@@ -73,7 +76,7 @@ class _DirectConductState extends State<DirectConduct> {
       _title.text = documentSnapshot['title'];
       _number.text = documentSnapshot['number'];
       _rotation = documentSnapshot['rotation'];
-      _date.text = documentSnapshot['date'];
+      _date = documentSnapshot['date'];
       _startTime.text = documentSnapshot['startTime'];
       _endTime.text = documentSnapshot['endTime'];
       _selectVenue.text = documentSnapshot['selectVenue'];
@@ -101,13 +104,34 @@ class _DirectConductState extends State<DirectConduct> {
         isScrollControlled: true,
         context: context,
         builder: (BuildContext ctx) {
-          return Container(
+
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: LightColors.kDarkYellow,
+              leading: IconButton(
+                  icon: new Icon(Icons.arrow_back),
+                  onPressed: (){
+                    Navigator.pop(context,true);
+                  }
+              ),
+
+              title: Text(
+                " ",
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              actions: [
+                //IconButton(icon: Icon(Icons.search, color: Colors.grey,), onPressed: () {}),
+              ],
+            ),
+            body: SingleChildScrollView(
+            child:  Container(
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
-              padding: const EdgeInsets.only(
-                  top: 10.0, left: 20.0, right: 20.0, bottom: 2),
+              padding:  const EdgeInsets.only( left: 10.0, right: 10.0,bottom: 10,top:20),
               child: SingleChildScrollView(
                   child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -116,6 +140,10 @@ class _DirectConductState extends State<DirectConduct> {
                     TextField(
                       controller: _title,
                       decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(8))),
+                          hintText: 'Title',
+
                           labelText: 'Title',
                           labelStyle: const TextStyle(
                               color: Colors.black, //<-- SEE HERE
@@ -126,6 +154,10 @@ class _DirectConductState extends State<DirectConduct> {
                         TextFormField(
                           controller: _number,
                           decoration: const InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(8))),
+                              hintText: 'Session Number',
+
                               labelText: 'Session Number',
                               labelStyle: TextStyle(
                                   color: Colors.black, //<-- SEE HERE
@@ -135,42 +167,12 @@ class _DirectConductState extends State<DirectConduct> {
 
                     const SizedBox(height: 20),
                     TextField(
-                      controller: _date,
-                      decoration: const InputDecoration(
-                          labelText: 'Date',
-                          icon: Icon(Icons.calendar_today),
-                          labelStyle: const TextStyle(
-                              color: Colors.black, //<-- SEE HERE
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
-                      readOnly: true,
-                      //set it true, so that user will not able to edit text
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2020),
-                            //DateTime.now() - not to allow to choose before today.
-                            lastDate: DateTime(2100));
-
-                        if (pickedDate != null) {
-                          print(
-                              pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(pickedDate);
-                          print(
-                              formattedDate); //formatted date output using intl package =>  2021-03-16
-                          setState(() {
-                            _date.text =
-                                formattedDate; //set output date to TextField value.
-                          });
-                        } else {}
-                      },
-                    ),
-                    const SizedBox(height: 30),
-                    TextField(
                       controller: _startTime,
                       decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(8))),
+                          hintText: 'Start Time',
+
                           labelText: 'Start Time',
                           icon: Icon(Icons.timer),
                           labelStyle: const TextStyle(
@@ -209,6 +211,10 @@ class _DirectConductState extends State<DirectConduct> {
                     TextField(
                       controller: _endTime,
                       decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(8))),
+                          hintText: 'End Time',
+
                           labelText: 'End Time',
                           icon: Icon(Icons.timer),
                           labelStyle: const TextStyle(
@@ -278,6 +284,9 @@ class _DirectConductState extends State<DirectConduct> {
                     TextField(
                       controller: _selectVenue,
                       decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(8))),
+                          hintText: 'Selected venue',
                           labelText: 'Selected venue',
                           labelStyle: const TextStyle(
                               color: Colors.black, //<-- SEE HERE
@@ -732,6 +741,9 @@ class _DirectConductState extends State<DirectConduct> {
                     TextField(
                       controller: _reasonsCancel,
                       decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(8))),
+                          hintText: 'Reasons for Cancelling',
                           labelText: 'Reasons for Cancelling',
                           labelStyle: const TextStyle(
                           color: Colors.black, //<-- SEE HERE
@@ -896,6 +908,16 @@ class _DirectConductState extends State<DirectConduct> {
                     ),
                     const SizedBox(height: 30.0),
                     ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            LightColors.kDarkYellow,
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
                         child: Text(action == 'add' ? 'add' : 'update',
                             style: const TextStyle(
                               fontFamily: 'Raleway',
@@ -912,7 +934,7 @@ class _DirectConductState extends State<DirectConduct> {
                           final String? rotation = _rotation;
                           final String? startTime = _startTime.text;
                           final String? endTime = _endTime.text;
-                          final String? date = _date.text;
+                          final Timestamp? date = _date;
                           final String? reasonsCancel = _reasonsCancel.text;
                           final String? selectVenue = _selectVenue.text;
                           final String? bookVenue = _bookVenue;
@@ -1001,7 +1023,7 @@ class _DirectConductState extends State<DirectConduct> {
                             );
                           }
                         })
-                  ])));
+                  ])))));
         });
   }
 
@@ -1018,30 +1040,27 @@ class _DirectConductState extends State<DirectConduct> {
     final uid = user?.uid.toString();
 
     return Scaffold(
-      body: Container(
-        child: SingleChildScrollView(
-          child: ColumnSuper(
-            innerDistance: -30.0,
-            children: [
-              Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  height: 120,
-                  color: LightColors.kRed,
-                  child: Column(
-                    children: [
-                      const Padding(padding: EdgeInsets.only(top: 40)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            'My Direct Log Sessions',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ],
-                  )),
-              Container(
+      appBar: AppBar(
+        backgroundColor: LightColors.kDarkYellow,
+        leading: IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: (){
+              Navigator.pop(context,true);
+            }
+        ),
+
+        title: const Text(
+          "Conducted Direct Sessions",
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        actions: [
+          //IconButton(icon: Icon(Icons.search, color: Colors.grey,), onPressed: () {}),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child:  Container(
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(90),
@@ -1049,8 +1068,9 @@ class _DirectConductState extends State<DirectConduct> {
                 height: MediaQuery.of(context).size.height,
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
-                        .collection('direct')
+                        .collection('sessionLogs')
                         .where('uid', isEqualTo: uid)
+                        .where('logSession', isEqualTo: 'Direct')
                         .where('sessionStatus', isEqualTo: 'conduct session')
                         .where('rotation', isEqualTo: rotNum)
                         .snapshots(),
@@ -1060,1027 +1080,830 @@ class _DirectConductState extends State<DirectConduct> {
                         return ListView.builder(
                             shrinkWrap: true,
                             itemCount: streamSnapshot.data!.docs.length,
-
                             itemBuilder: (context, index) {
                               final DocumentSnapshot documentSnapshot =
-                                  streamSnapshot.data!.docs[index];
+                              streamSnapshot.data!.docs[index];
+                              DateTime date = (documentSnapshot['date'] as Timestamp).toDate();
 
-                              final documentSnapshotList = streamSnapshot.data?.docs;
-                              var results = documentSnapshotList?.length;
-                              return FocusedMenuHolder(
-                                menuWidth:
-                                    MediaQuery.of(context).size.width / 0.50,
-                                blurSize: 5.0,
-                                menuItemExtent: 45,
-
-                                menuBoxDecoration: const BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(15.0))),
-                                duration: const Duration(milliseconds: 100),
-                                animateMenuItems: true,
-                                blurBackgroundColor: Colors.black54,
-                                openWithTap: true,
-                                // Open Focused-Menu on Tap rather than Long Press
-                                menuOffset: 10.0,
-                                // Offset value to show menuItem from the selected item
-                                bottomOffsetHeight: 80.0,
-
-                                menuItems: [
-                                  FocusedMenuItem(
-                                      title: const Text("Open"),
-                                      trailingIcon:
-                                          const Icon(Icons.open_in_new),
-                                      onPressed: () {
-                                        showModalBottomSheet(
-                                            backgroundColor: Colors.white,
-                                            context: context,
-                                            builder: (context) => Container(
-                                                padding: const EdgeInsets.only(
-                                                  left: 50.0,
-                                                  right: 50.0,
-                                                ),
-                                                child: SingleChildScrollView(
-                                                    child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 180),
-                                                      child: const Icon(
-                                                        Icons.horizontal_rule,
-                                                        size: 50,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              15),
-                                                      child: Text(
-                                                        documentSnapshot[
-                                                            'title'],
-                                                        style: const TextStyle(
-                                                            fontSize: 40,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                          const EdgeInsets
-                                                              .all(15),
-                                                          child: const Text(
-                                                              ' SESSION NUMBER : ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                          const EdgeInsets
-                                                              .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                              'number'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .red)),
-                                                        ),
-                                                      ],
-                                                    ),    Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                          const EdgeInsets
-                                                              .all(15),
-                                                          child: const Text(
-                                                              ' CLINICAL ROTATION NUMBER : ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                          const EdgeInsets
-                                                              .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                              'rotation'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .red)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              ' START TIME : ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'startTime'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .red)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              ' END TIME : ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'endTime'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .red)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              ' DATE : ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'date'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .red)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Select Venue: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'selectVenue'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .red)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(5),
-                                                          child: const Text(
-                                                              'BOOK VENUE: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(5),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'bookVenue'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Identify client(s): ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'clients'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Type of Session: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'sessionType'],
-                                                              style: const TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Age group of Erickson: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'ageGroup'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Communicate with stakeholders: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'communicated'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Physical diagnoses: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'physicalHealth'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Mental diagnoses: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'mentalHealth'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Set session outcomes: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'setOutcomes'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Complete session plan: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'completeSession'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Submit session plan: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'submitSession'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Prepare Equipment and materials: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'prepareEandM'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Prepare venue: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'prepareVenue'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Session Status: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'sessionStatus'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Return material / equipment: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'returnedEandM'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Clean venue: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'cleanedVenue'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Complete record keeping: ',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'completeRecord'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider(
-                                                        color: Colors.black),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .all(15),
-                                                          child: const Text(
-                                                              'Completed reflection',
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        Container(
-                                                          child: Text(
-                                                              documentSnapshot[
-                                                                  'completeReflection'],
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  color: Colors
-                                                                      .red)),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ))));
-                                      }),
-                                  FocusedMenuItem(
-                                      title: Text("Edit"),
-                                      trailingIcon: Icon(Icons.edit),
-                                      onPressed: () {
-                                        createTodo(documentSnapshot);
-                                      }),
-                                  FocusedMenuItem(
-                                      title: const Text("Session Cancelled"),
-                                      trailingIcon: Icon(Icons.work),
-                                      onPressed: () {
-                                        direct.doc(documentSnapshot.id).update(
-                                            {"sessionStatus": 'canceled'});
-                                      }),
-                                  FocusedMenuItem(
-                                      title: const Text(
-                                        "Delete",
-                                        style:
-                                            TextStyle(color: Colors.redAccent),
-                                      ),
-                                      trailingIcon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: () {
-                                        _deleteTodo(documentSnapshot.id);
-                                      }),
-                                  FocusedMenuItem(
-                                      title: const Text(
-                                        "Download PDF",
-                                        style:
-                                            TextStyle(color: Colors.redAccent),
-                                      ),
-                                      trailingIcon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: () async {
-                                        // final font = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
-                                        //final ttf = pw.Font.ttf(font);
-                                        final pdf = pw.Document();
-
-                                        pdf.addPage(
-                                          pw.Page(
-                                            build: (pw.Context context) =>
-                                                pw.Center(
-                                              child: pw.Text(
+                              return Card(
+                                clipBehavior: Clip.antiAlias,
+                                elevation: 8,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        height: 170,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(5),
+                                              child: Text(
                                                 documentSnapshot['title'],
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold),
                                               ),
                                             ),
-                                          ),
-                                        );
+                                            const Divider(),
+                                            Padding(
+                                              padding: const EdgeInsets.all(16.0),
+                                              child: Text(
+                                                documentSnapshot['sessionType'],
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                            ButtonBar(
+                                              alignment: MainAxisAlignment.start,
+                                              children: [
+                                                TextButton.icon(
+                                                    icon: const Icon(
+                                                      Icons.open_in_new,
+                                                      color: LightColors.kDarkYellow,
+                                                      size: 18.0,
+                                                    ),
+                                                    onPressed: () {
+                                                      showModalBottomSheet(
+                                                          backgroundColor:
+                                                          Colors.white,
+                                                          context: context,
+                                                          builder: (context) =>
+                                                              Container(
+                                                                  padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                    left: 10.0,
+                                                                    right: 10.0,
+                                                                  ),
+                                                                  child:
+                                                                  SingleChildScrollView(
+                                                                      child:
+                                                                      Column(
+                                                                        mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                        crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                        children: [
+                                                                          Container(
+                                                                            padding: const EdgeInsets
+                                                                                .symmetric(
+                                                                                horizontal:
+                                                                                180),
+                                                                            child:
+                                                                            const Icon(
+                                                                              Icons
+                                                                                  .horizontal_rule,
+                                                                              size: 50,
+                                                                            ),
+                                                                          ),
+                                                                          Container(
+                                                                            margin:
+                                                                            const EdgeInsets
+                                                                                .all(15),
+                                                                            child: Text(
+                                                                              documentSnapshot[
+                                                                              'title'],
+                                                                              style: const TextStyle(
+                                                                                  fontSize: 25,
+                                                                                  color: Colors.black),
+                                                                            ),
+                                                                          ),
+                                                                          Row(
+                                                                            mainAxisAlignment:
+                                                                            MainAxisAlignment
+                                                                                .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    ' START TIME : ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 22,
+                                                                                        color:Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: Text(
+                                                                                    documentSnapshot[
+                                                                                    'startTime'],
+                                                                                    style: const TextStyle(
+                                                                                        fontSize: 18,
+                                                                                        color: Colors.red,
+                                                                                        fontWeight: FontWeight.normal)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Row(
+                                                                            mainAxisAlignment:
+                                                                            MainAxisAlignment
+                                                                                .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    ' END TIME : ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: Text(
+                                                                                    documentSnapshot[
+                                                                                    'endTime'],
+                                                                                    style: const TextStyle(
+                                                                                        fontSize: 20,
+                                                                                      color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Row(
+                                                                            mainAxisAlignment:
+                                                                            MainAxisAlignment
+                                                                                .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    ' DATE : ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color:Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: Text(
+                                                                                    date.toString(),
+                                                                                    style: const TextStyle(
+                                                                                        fontSize: 20,
+                                                                                      color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                  
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                         child: Row(
+                                                                            mainAxisAlignment:
+                                                                            MainAxisAlignment
+                                                                                .start,
+                                                                            children: [
+                                                                              Container(
 
-                                        final file = File('example.pdf');
-                                        await file
-                                            .writeAsBytes(await pdf.save());
-                                      }),
-                                ],
-                                onPressed: () {},
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Select Venue: ',
+                                                                                    textAlign: TextAlign.left,
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Container(
+                                                                                padding: const EdgeInsets.all(16.0),
 
-                                child: Card(
-                                  color:  Colors.white70,
-                                  child: ListTile(
+                                                                                child: Text(
+                                                                                    documentSnapshot[
+                                                                                    'selectVenue'],
+                                                                                    textAlign: TextAlign.left,
+                                                                                    style: const TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                  ),
+                                                                  Container(
+                                                                      decoration: BoxDecoration(
+                                                                        border: Border.all(),
+                                                                      ),
+                                                                      child: Row(
 
-                                    leading: Icon(Icons.star),
-                                    title: Text(
-                                      documentSnapshot['title'],
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    subtitle: Text(
-                                      documentSnapshot['sessionType'],
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                                                            mainAxisAlignment:
+                                                                            MainAxisAlignment
+                                                                                .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Book venue: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    5),
+                                                                                child: Text(
+                                                                                    documentSnapshot[
+                                                                                    'bookVenue'],
+                                                                                    style: const TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                  ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Identify client(s): ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Text(
+                                                                                  documentSnapshot[
+                                                                                  'clients'],
+                                                                                  style: const TextStyle(
+                                                                                      fontSize: 20,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                      color: Colors.red)),
+                                                                            ],
+                                                                          ),
+                                                                  ),
+                                                                          Container(
+                                                                            decoration: BoxDecoration(
+                                                                              border: Border.all(),
+                                                                            ),
+                                                                            child: Row(
+                                                                              mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Type of Session: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                Flexible(
+                                                                              child:Text(
+                                                                                  documentSnapshot[
+                                                                                  'sessionType'],
+                                                                                  style: const TextStyle(
+                                                                                      fontSize: 20,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                      color: Colors.red)),),
+
+                                                                   ]
+                                                                        ),
+                                                                  ),
+                                                                  Container(
+                                                                      decoration: BoxDecoration(
+                                                                        border: Border.all(),
+                                                                      ),
+                                                                      child: Row(
+                                                                        mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Age group of Erickson: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+
+
+                                                                Flexible(
+                                                                  child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'ageGroup'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),),
+                                                                        ]
+                                                                  ),
+
+                                                                  ),
+                                                                  Container(
+                                                                      decoration: BoxDecoration(
+                                                                        border: Border.all(),
+                                                                      ),
+                                                                      child: Row(
+                                                                        mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Communicated with stakeholders: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'communicated'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                       ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Physical diagnoses: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                Flexible(
+                                                                    child:Text(
+
+                                                                                    documentSnapshot[
+                                                                                    'physicalHealth'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                      ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Mental diagnoses: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'mentalHealth'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                         ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Set session outcomes: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'setOutcomes'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                       ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Complete session plan: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'completeSession'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Submit session plan: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'submitSession'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                         ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Prepare Equipment and materials: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'prepareEandM'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                      ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Prepare venue: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                Flexible(
+                                                                  child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'prepareVenue'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                      ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Session Status: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'sessionStatus'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                       ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Return material / equipment: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'returnedEandM'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                  ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Clean venue: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'cleanedVenue'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                         ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Complete record keeping: ',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'completeRecord'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin:
+                                                                                const EdgeInsets.all(
+                                                                                    15),
+                                                                                child: const Text(
+                                                                                    'Completed reflection',
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold)),
+                                                                              ),
+                                                                              Flexible(
+                                                                                child:Text(
+                                                                                    documentSnapshot[
+                                                                                    'completeReflection'],
+                                                                                    style: TextStyle(
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.red)),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                  ),
+                                                                        ],
+                                                                      ))));
+                                                    },
+                                                    label: Text('OPEN',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors.black))),
+                                                TextButton.icon(
+                                                  icon: const Icon(
+                                                    Icons.edit,
+                                                    color: LightColors.kDarkYellow,
+                                                    size: 18.0,
+                                                  ),
+                                                  onPressed: () {
+                                                    createTodo(documentSnapshot);
+                                                  },
+                                                  label: Text('EDIT',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black)),
+                                                ),
+                                                TextButton.icon(
+                                                  icon: const Icon(
+                                                    Icons.run_circle_outlined,
+                                                    color: LightColors.kDarkYellow,
+                                                    size: 18.0,
+                                                  ),
+                                                  onPressed: () {
+                                                    direct.doc(documentSnapshot.id)
+                                                        .update({"sessionStatus": 'canceled'});
+                                                  },
+                                                  label: const Text("Cancelled",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black)),
+                                                ),
+                                                TextButton.icon(
+                                                  icon: const Icon(
+                                                    Icons.delete_forever_outlined,
+                                                    color: LightColors.kDarkYellow,
+                                                    size: 18.0,
+                                                  ),
+                                                  onPressed: () {
+                                                    _deleteTodo(documentSnapshot.id);
+                                                  },
+                                                  label: const Text("DELETE",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.redAccent)),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                  ],
                                 ),
                               );
                             });
@@ -2088,17 +1911,14 @@ class _DirectConductState extends State<DirectConduct> {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
-                    }),
-              ),
-            ],
-          ),
+                        }),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+     floatingActionButton: FloatingActionButton(
         onPressed: () => createTodo(),
-        backgroundColor: LightColors.kRed,
-        child: const Icon(Icons.add),
-      ),
+      backgroundColor: LightColors.kDarkYellow,
+     child: const Icon(Icons.add),
+    ),
     );
   }
 }

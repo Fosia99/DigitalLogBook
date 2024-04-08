@@ -45,7 +45,7 @@ class _LoginState extends State<Login> {
             appBar: AppBar(
 
               title: Text("Login", style: TextStyle(color: Colors.black)),
-              backgroundColor:  Color.fromRGBO(253, 111, 150, 1),
+              backgroundColor:  LightColors.kDarkYellow,
               actions: [
                 TextButton.icon(
                   onPressed: () {
@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
                       padding: const EdgeInsets.fromLTRB(15.0, 50.0, 0.0, 0.0),
                       child: const Text('Hi',
                           style: TextStyle(
-                              color: Color.fromRGBO(253, 111, 150, 1),
+                              color: LightColors.kDarkYellow,
                               fontSize: 80.0,
                               fontFamily: "Raleway",
                               fontWeight: FontWeight.bold)),
@@ -83,7 +83,7 @@ class _LoginState extends State<Login> {
                           fontFamily: "Raleway",
                           fontSize: 80.0,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(111, 105, 172, 1),
+                          color: LightColors.kYellow,
                         ),
                         child: AnimatedTextKit(
                           animatedTexts: [
@@ -101,7 +101,7 @@ class _LoginState extends State<Login> {
                           style: TextStyle(
                               fontSize: 80.0,
                               fontWeight: FontWeight.bold,
-                              color: Color.fromRGBO(111, 105, 172, 1))),
+                              color: LightColors.kYellow,)),
                     )
                   ],
                 ),
@@ -118,6 +118,7 @@ class _LoginState extends State<Login> {
                           // textbox for email
                           TextFormField(
                             decoration: InputDecoration(
+                              hoverColor: LightColors.kYellow,
                               fillColor:Colors.black,
                                 labelText: "Email",
                                 border: OutlineInputBorder(
@@ -149,7 +150,7 @@ class _LoginState extends State<Login> {
                             },
                           ),
 
-                          SizedBox(height: 20.0),
+                          SizedBox(height: 40.0),
 
                           // Login  button
                           ElevatedButton(
@@ -185,7 +186,7 @@ class _LoginState extends State<Login> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              primary:Color.fromRGBO(253, 111, 150, 1),
+                              primary:LightColors.kDarkYellow,
                               minimumSize: Size(150, 50),
                             ),
                           ),

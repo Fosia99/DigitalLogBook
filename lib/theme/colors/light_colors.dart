@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
 class LightColors  {
-  static const Color kLightYellow = Color(0xFFFFF9EC);
-  static const Color kLightYellow2 = Color(0xFFFFE4C7);
-  static const Color kDarkYellow = Color(0xFFF9BE7C);
-  static const Color kPalePink = Color(0xFFFED4D6);
-
-  static const Color kRed = Color(0xFFE46472);
-  static const Color kLavender = Color(0xFFD5E4FE);
-  static const Color kBlue = Color(0xFF6488E4);
-  static const Color kLightGreen = Color(0xFFD9E6DC);
-  static const Color kGreen = Color(0xFF309397);
-
-  static const Color kDarkBlue = Color(0xFF0D253F);
+  static const Color kLightYellow = Colors.white;
+  static const Color kLightYellow2 = Colors.white;
+  static const Color kDarkYellow = Color(0xffdb2a22);
+  static const Color kLightRed = Color(0xffffa3a6);
+  static const Color kYellow = Color(0xffe5b535);
+  static const Color kPalePink = Colors.white;
+  static const Color kWhite = Colors.white;
+  static const Color kRed = Colors.white;
+  static const Color kLavender = Colors.white;
+  static const Color kBlue = Colors.white;
+  static const Color kLightGreen = Colors.white;
+  static const Color kGreen = Colors.white;
+  static const Color kTeal = Colors.white;
+  static const Color kLightTeal = Colors.white;
+  static const Color kBlack = Colors.black;
+  static const Color kDarkBlue = Color(0xffdb2a22);
 }

@@ -39,13 +39,13 @@ class _DirectHomeState extends State<DirectHome> {
     ];
     var downwardIcon = const Icon(
       Icons.keyboard_arrow_down,
-      color: Colors.black54,
+      color: Colors.black,
     );
     return Scaffold(
 
 
       bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor:  LightColors.kRed,
+          backgroundColor:  LightColors.kDarkYellow,
           height: 40,
           index: 1,
           onTap: (currentIndex) => setState(() {

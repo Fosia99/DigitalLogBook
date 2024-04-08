@@ -1,7 +1,5 @@
 import 'package:digital_logbook/LectureScreens/myStudents.dart';
 import 'package:digital_logbook/screens/logout.dart';
-import 'package:digital_logbook/screens/student_homepage.dart';
-import 'package:digital_logbook/screens/teacher_homepage.dart';
 import '../LectureScreens/profile.dart';
 import '/screens/LogSession.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +73,7 @@ class SupervisorDashboardScreenState extends State<SupervisorDashboardScreen>{
     return Scaffold(
       appBar: AppBar(
 
-        backgroundColor: LightColors.kRed,
+        backgroundColor: LightColors.kDarkYellow,
         title: const Text("LECTURE  ---- Home", style: TextStyle(color: Colors.black,),),
         actions: [
           //IconButton(icon: Icon(Icons.search, color: Colors.grey,), onPressed: () {}),
@@ -247,7 +245,7 @@ class SupervisorDashboardScreenState extends State<SupervisorDashboardScreen>{
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TeacherHomePage(),
+                    builder: (context) => Profile(),
                   ),
                 );
               },

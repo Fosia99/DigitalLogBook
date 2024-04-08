@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.digital_logbook">
+
    <application
         android:label="Digital LogBook"
         android:icon="@mipmap/ic_launcher">
@@ -29,7 +30,18 @@
               />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+
+                <!--
+                    Solve the problem:
+                    "No application found for TargetPlatform.android_x86.
+                    Is your project missing an android/app/src/main/AndroidManifest.xml?
+                    Consider running "flutter create ." to create one."
+                -->
+                <!--<pages.category android:name="android.intent.pages.category.LAUNCHER"/>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!--
+                    Solved.
+                -->
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
@@ -37,6 +49,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-       <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     </application>
 </manifest>
